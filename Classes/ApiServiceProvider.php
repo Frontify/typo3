@@ -7,12 +7,15 @@ use Frontify\Typo3\Asset\FrontifyAsset;
 use Frontify\Typo3\Utility\Frontify;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class ApiServiceProvider implements SingletonInterface {
+
+    public const CACHE_TIME = 60 * 60 * 24 * 7;
 
     /** @var bool */
     protected $isEnabled;
@@ -28,11 +31,19 @@ class ApiServiceProvider implements SingletonInterface {
      */
     protected $client;
 
+    /** @var \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface */
+    private $cache;
+
     /**
      * ServiceProvider constructor.
      */
     public function __construct() {
         $configuration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('frontify_typo3');
+
+        /** @var CacheManager $cacheManager */
+        $cacheManager = GeneralUtility::makeInstance(CacheManager::class);
+        $this->cache = $cacheManager->getCache('frontify');
+
         $this->frontifyBaseUrl = $configuration['url'] ?? null;
         $this->token = $configuration['token'] ?? null;
         $this->isEnabled = $this->frontifyBaseUrl && $this->token;
@@ -110,7 +121,7 @@ class ApiServiceProvider implements SingletonInterface {
      */
     public function writeToResource(string $identifier, $resource) {
         list($id, $url) = Frontify::extractIdAndToken($identifier);
-        $this->client->get(
+        $this->getClient()->get(
             $url,
             [
                 'sink' => $resource
@@ -130,10 +141,15 @@ class ApiServiceProvider implements SingletonInterface {
      * @throws \Exception
      */
     public function getAssetById(int $id): ?FrontifyAsset {
+        $cacheKey = sha1('frontify-' . $id);
+        if ($this->cache->has($cacheKey)) {
+            return $this->cache->get($cacheKey);
+        }
+
         $response = $this->getClient()->get("/v1/screen/data/{$id}");
         $assetData = $this->getJson($response);
 
-        return new FrontifyAsset(
+        $asset = new FrontifyAsset(
             $assetData['id'],
             $assetData['title'],
             $assetData['filename'],
@@ -149,6 +165,9 @@ class ApiServiceProvider implements SingletonInterface {
             (int) $assetData['filesize'] * 1024,
             $assetData['metadata']
         );
+
+        $this->cache->set($cacheKey, $asset, [], self::CACHE_TIME);
+        return $asset;
     }
 
 }

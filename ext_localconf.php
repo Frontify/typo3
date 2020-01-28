@@ -26,12 +26,12 @@ $extractorRegistry->registerExtractionService(\Frontify\Typo3\Utility\MetaDataEx
 unset($extractorRegistry);
 
 /** @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $dispatcher */
-$signalSlotDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\SignalSlot\Dispatcher::class);
+$signalDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\SignalSlot\Dispatcher::class);
 
 // Add legacy Events
 if ($majorVersionNumber === 9) {
     /** @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher */
-    $signalSlotDispatcher->connect(
+    $signalDispatcher->connect(
         TYPO3\CMS\Core\Resource\ResourceStorage::class,
         \TYPO3\CMS\Core\Resource\Service\FileProcessingService::SIGNAL_PreFileProcess,
         \Frontify\Typo3\Asset\Processing::class,
@@ -39,6 +39,10 @@ if ($majorVersionNumber === 9) {
     );
 }
 
+// Caching
+if (!isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['frontify'])) {
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['frontify'] = [];
+}
 
 /**
  * Scripts and Style

@@ -35,7 +35,7 @@ class AssetChooserController {
 
         $fileIds = [];
         foreach ($assets as $asset) {
-            $file = $storage->getFile('/' . $asset->identifier);
+            $file = $storage->getFile($asset->identifier);
             $fileIds[] = $file->getUid();
         }
 
@@ -48,24 +48,6 @@ class AssetChooserController {
         return $response;
     }
 
-    public function assetToFileRecord(FrontifyAsset $assetInput, ResourceStorage $storage) {
-        return [
-            'missing' => 0,
-            'type' => File::FILETYPE_IMAGE,
-            'storage' => $storage->getUid(),
-            'identifier' => '/' . $assetInput->identifier,
-            'identifier_hash' => md5($assetInput->identifier),
-            'extension' => $assetInput->ext,
-            'mime_type' => $assetInput->mimeType,
-            'name' => $assetInput->name,
-            'sha1' => sha1($assetInput->id),
-            'size' => $assetInput->fileSize,
-            'creation_date' => strtotime($assetInput->createdAt),
-            'modification_date' => strtotime($assetInput->modifiedAt),
-            'folder_hash' => md5('/'),
-        ];
-    }
-
     protected function getFileIndexRepository() {
         return FileIndexRepository::getInstance();
     }
@@ -75,9 +57,6 @@ class AssetChooserController {
         $storageRepository = GeneralUtility::makeInstance(StorageRepository::class);
         $storage = $storageRepository->findByStorageType('frontify')[0];
         return $storage;
-
-        // $resourceFactory = \TYPO3\CMS\Core\Resource\ResourceFactory::getInstance();
-        // return $resourceFactory->getDefaultStorage();
     }
 
     protected function mapToFrontifyAssets(array $asset): FrontifyAsset {

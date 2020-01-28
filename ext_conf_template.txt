@@ -1,0 +1,5 @@
+# cat=access/Frontify; type=string; label=Frontify Url (demo.frontify.com)
+url =
+
+# cat=access/Frontify; type=string; label=Frontify Project Token
+token =

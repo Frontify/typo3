@@ -1,0 +1,6 @@
+services:
+  'Frontify\Typo3\Asset\Processing':
+      tags:
+        - name: event.listener
+          method: 'processAsset'
+          event: 'TYPO3\CMS\Core\Resource\Event\BeforeFileProcessingEvent'

@@ -1,0 +1,50 @@
+{
+  "name": "frontify/frontify-typo3",
+  "type": "typo3-cms-extension",
+  "description": "Frontify integration for Typo",
+  "keywords": [
+    "TYPO3",
+    "Frontify",
+    "DAM"
+  ],
+  "homepage": "https://frontify.com",
+  "authors": [
+    {
+      "name": "Leo Studer",
+      "email": "leo.studer@frontify.com",
+      "role": "Developer"
+    }
+  ],
+  "license": [
+    "GPL-2.0+"
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": ">=7.2.0",
+    "typo3/cms-core": "^9.5 || ^10.1",
+    "guzzlehttp/guzzle": "~6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Frontify\\Typo3\\": "Classes/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "vendor-dir": ".build/vendor",
+    "bin-dir": ".build/bin"
+  },
+  "replace": {
+    "frontify_typo3": "self.version",
+    "typo3-ter/frontify_typo3": "self.version"
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "frontify_typo3"
+    },
+    "branch-alias": {
+      "dev-master": "11.1.x-dev"
+    }
+  }
+}

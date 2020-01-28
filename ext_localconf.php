@@ -25,10 +25,12 @@ $extractorRegistry = \TYPO3\CMS\Core\Resource\Index\ExtractorRegistry::getInstan
 $extractorRegistry->registerExtractionService(\Frontify\Typo3\Utility\MetaDataExtractor::class);
 unset($extractorRegistry);
 
-// Add legacy support
+/** @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $dispatcher */
+$signalSlotDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\SignalSlot\Dispatcher::class);
+
+// Add legacy Events
 if ($majorVersionNumber === 9) {
     /** @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher */
-    $signalSlotDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\SignalSlot\Dispatcher::class);
     $signalSlotDispatcher->connect(
         TYPO3\CMS\Core\Resource\ResourceStorage::class,
         \TYPO3\CMS\Core\Resource\Service\FileProcessingService::SIGNAL_PreFileProcess,
@@ -48,8 +50,7 @@ if (TYPO3_MODE === 'BE') {
     $renderer->addCssFile('EXT:frontify_typo3/Resources/Public/Css/FrontifyPicker.css','stylesheet');
 }
 
-/** @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $dispatcher */
-$signalDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\SignalSlot\Dispatcher::class);
+// Installation event, creates storage driver
 $signalDispatcher->connect(
     \TYPO3\CMS\Extensionmanager\Utility\InstallUtility::class,
     'afterExtensionInstall',

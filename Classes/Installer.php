@@ -5,6 +5,7 @@ namespace Frontify\Typo3;
 
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extensionmanager\Utility\InstallUtility;
 
@@ -16,7 +17,16 @@ class Installer {
             return;
         }
 
-        $this->createDriver();
+        // Only create the driver once.
+        if (!$this->hasFrontifyDriver()) {
+            $this->createDriver();
+        }
+    }
+
+    private function hasFrontifyDriver(): bool {
+        /** @var StorageRepository $storageRepository */
+        $storageRepository = GeneralUtility::makeInstance(StorageRepository::class);
+        return count($storageRepository->findByStorageType('frontify') ?? []) >= 1;
     }
 
     protected function getDatabaseConnection(string $table): Connection {

@@ -44,9 +44,7 @@ if (!isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['frontify'] = [];
 }
 
-/**
- * Scripts and Style
- */
+// Add scripts and style
 if (TYPO3_MODE === 'BE') {
     /** @var \TYPO3\CMS\Core\Page\PageRenderer $renderer */
     $renderer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Page\PageRenderer::class);

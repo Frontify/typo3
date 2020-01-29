@@ -1,5 +1,5 @@
 {
-  "name": "frontify/typo3",
+  "name": "frontify/frontify_typo3",
   "type": "typo3-cms-extension",
   "description": "Frontify integration for Typo",
   "keywords": [
@@ -30,18 +30,12 @@
       "Frontify\\Typo3\\": "Classes/"
     }
   },
-  "config": {
-    "optimize-autoloader": true,
-    "vendor-dir": ".Build/vendor/",
-    "bin-dir": ".Build/bin/"
-  },
   "replace": {
-    "frontify/frontify-typo3": "self.version"
+    "frontify_typo3": "self.version",
+    "typo3-ter/frontify_typo3": "self.version"
   },
   "extra": {
     "typo3/cms": {
-      "cms-package-dir": "{$vendor-dir}/typo3/cms",
-      "web-dir": ".Build/public",
       "extension-key": "frontify_typo3"
     }
   }

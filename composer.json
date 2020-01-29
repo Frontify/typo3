@@ -1,5 +1,5 @@
 {
-  "name": "frontify/frontify_typo3",
+  "name": "frontify/typo3",
   "type": "typo3-cms-extension",
   "description": "Frontify integration for Typo",
   "keywords": [
@@ -15,14 +15,10 @@
       "role": "Developer"
     }
   ],
-  "license": [
-    "GPL-2.0+"
-  ],
-  "minimum-stability": "dev",
-  "prefer-stable": true,
+  "license": "GPL-2.0-or-later",
   "require": {
     "php": ">=7.2.0",
-    "typo3/cms-core": "^9.5 || ^10.1",
+    "typo3/cms-core": "^9.5 || ^10.0",
     "guzzlehttp/guzzle": "~6.0"
   },
   "autoload": {
@@ -31,7 +27,7 @@
     }
   },
   "replace": {
-    "frontify_typo3": "self.version",
+    "frontify/typo3": "self.version",
     "typo3-ter/frontify_typo3": "self.version"
   },
   "extra": {

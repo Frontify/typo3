@@ -1,5 +1,5 @@
 {
-  "name": "frontify/frontify-typo3",
+  "name": "frontify/typo3",
   "type": "typo3-cms-extension",
   "description": "Frontify integration for Typo",
   "keywords": [

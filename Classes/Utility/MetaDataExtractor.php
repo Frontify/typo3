@@ -17,10 +17,6 @@ class MetaDataExtractor implements ExtractorInterface {
      */
     private $apiServiceProvider;
 
-    public function __construct() {
-        $this->apiServiceProvider = GeneralUtility::makeInstance(ApiServiceProvider::class);
-    }
-
     /**
      * Returns an array of supported file types;
      * An empty array indicates all filetypes
@@ -81,6 +77,14 @@ class MetaDataExtractor implements ExtractorInterface {
         return true;
     }
 
+    private function getApiServiceProvider(): ApiServiceProvider {
+        if (!isset($this->apiServiceProvider)) {
+            $this->apiServiceProvider = GeneralUtility::makeInstance(ApiServiceProvider::class);
+        }
+
+        return $this->apiServiceProvider;
+    }
+
     /**
      * The actual processing TASK
      *
@@ -92,7 +96,7 @@ class MetaDataExtractor implements ExtractorInterface {
      * @return array
      */
     public function extractMetaData(File $file, array $previousExtractedData = []) {
-        $asset = $this->apiServiceProvider->getAssetByIdentifier($file->getIdentifier());
+        $asset = $this->getApiServiceProvider()->getAssetByIdentifier($file->getIdentifier());
 
         return array_merge($previousExtractedData, [
             'width' => $asset->width,

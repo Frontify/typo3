@@ -42,7 +42,11 @@ class Processing {
      *
      * @param BeforeFileProcessingEvent $event
      */
-    public function processAsset(BeforeFileProcessingEvent $event) {
+    public function processAsset($event) {
+        if (!$event instanceof BeforeFileProcessingEvent) {
+            return;
+        }
+
         if (!$event->getDriver() instanceof FrontifyDriver) {
             return;
         }
